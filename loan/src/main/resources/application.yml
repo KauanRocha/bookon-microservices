@@ -1,0 +1,14 @@
+server:
+   port: 8081
+   error:
+      include-message: ALWAYS
+      include-binding-errors: ALWAYS
+      include-stacktrace: NEVER
+      include-exception: false
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: bookon

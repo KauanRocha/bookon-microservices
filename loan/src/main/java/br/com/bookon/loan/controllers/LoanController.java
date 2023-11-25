@@ -1,14 +1,14 @@
-package br.com.bookon.server.controllers;
+package br.com.bookon.loan.controllers;
 
+import br.com.bookon.loan.payloads.requests.LoanRequest;
+import br.com.bookon.loan.payloads.responses.LoanResponse;
+import br.com.bookon.loan.services.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import br.com.bookon.server.annotations.UserId;
-import br.com.bookon.server.payload.request.mongo.LoanRequest;
-import br.com.bookon.server.payload.response.mongo.LoanResponse;
-import br.com.bookon.server.services.LoanService;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -63,4 +63,5 @@ public class LoanController {
     	loanService.approvePropose(loanId, lenderUserId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }

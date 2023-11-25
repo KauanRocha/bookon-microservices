@@ -1,5 +1,5 @@
 server:
-   port: 8080
+   port: 8082
    error:
       include-message: ALWAYS
       include-binding-errors: ALWAYS
@@ -15,15 +15,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
-    
-    
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: bookon
-      username: server
-      password: server
+
 
 bezkoder:
    app:

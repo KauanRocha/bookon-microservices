@@ -1,10 +1,9 @@
-package br.com.bookon.server.configs;
+package br.com.bookon.loan.configs;
 
+import com.mongodb.client.MongoClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
-
-import com.mongodb.client.MongoClient;
 
 @Configuration
 public class MongoConfig {

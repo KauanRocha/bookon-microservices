@@ -1,5 +1,19 @@
-package br.com.bookon.server.services;
+package br.com.bookon.loan.services;
 
+import br.com.bookon.loan.enumerations.LoanStatusEnum;
+import br.com.bookon.loan.exceptions.LoanNotFoundException;
+import br.com.bookon.loan.exceptions.UserNotFoundException;
+import br.com.bookon.loan.models.Loan;
+import br.com.bookon.loan.models.UserMongo;
+import br.com.bookon.loan.payloads.requests.LoanRequest;
+import br.com.bookon.loan.payloads.responses.LoanResponse;
+import br.com.bookon.loan.repositories.LoanRepository;
+import br.com.bookon.server.exceptions.BookNotFoundException;
+import br.com.bookon.server.models.mongo.BookMongo;
+import br.com.bookon.server.models.postgres.Book;
+import br.com.bookon.server.models.postgres.User;
+import br.com.bookon.server.repositories.postgres.BookRepository;
+import br.com.bookon.server.repositories.postgres.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -7,21 +21,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import br.com.bookon.server.enumerations.LoanStatusEnum;
-import br.com.bookon.server.exceptions.BookNotFoundException;
-import br.com.bookon.server.exceptions.LoanNotFoundException;
-import br.com.bookon.server.exceptions.UserNotFoundException;
-import br.com.bookon.server.models.mongo.BookMongo;
-import br.com.bookon.server.models.mongo.Loan;
-import br.com.bookon.server.models.mongo.UserMongo;
-import br.com.bookon.server.models.postgres.Book;
-import br.com.bookon.server.models.postgres.User;
-import br.com.bookon.server.payload.request.mongo.LoanRequest;
-import br.com.bookon.server.payload.response.mongo.LoanResponse;
-//import br.com.bookon.server.producer.EmailProducer;
-import br.com.bookon.server.repositories.mongo.LoanRepository;
-import br.com.bookon.server.repositories.postgres.BookRepository;
-import br.com.bookon.server.repositories.postgres.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,13 +77,13 @@ public class LoanService {
 
     public LoanResponse createPropose(LoanRequest loanRequest, Integer borrowerId) {
         User borrowerPostgres = userRepository.findById(borrowerId)
-        		.orElseThrow(() -> new UserNotFoundException());
+        		.orElseThrow(UserNotFoundException::new);
 
         User lenderPostgres = userRepository.findById(loanRequest.getLenderId())
-        		.orElseThrow(() -> new UserNotFoundException());
+        		.orElseThrow(UserNotFoundException::new);
 
         Book bookPostgres = bookRepository.findById(loanRequest.getBookId())
-        		.orElseThrow(() -> new BookNotFoundException());
+        		.orElseThrow(BookNotFoundException::new);
 
         var loan = new Loan();
         loan.setBorrowerUser(new UserMongo(borrowerPostgres));
