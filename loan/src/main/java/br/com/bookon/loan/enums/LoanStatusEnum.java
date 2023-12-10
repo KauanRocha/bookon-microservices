@@ -1,4 +1,4 @@
-package br.com.bookon.loan.enumerations;
+package br.com.bookon.loan.enums;
 
 public enum LoanStatusEnum {
     PENDING,

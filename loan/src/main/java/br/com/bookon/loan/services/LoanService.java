@@ -1,28 +1,21 @@
 package br.com.bookon.loan.services;
 
-import br.com.bookon.loan.enumerations.LoanStatusEnum;
-import br.com.bookon.loan.exceptions.LoanNotFoundException;
-import br.com.bookon.loan.exceptions.UserNotFoundException;
+import br.com.bookon.loan.enums.LoanStatusEnum;
 import br.com.bookon.loan.models.Loan;
-import br.com.bookon.loan.models.UserMongo;
-import br.com.bookon.loan.payloads.requests.LoanRequest;
-import br.com.bookon.loan.payloads.responses.LoanResponse;
+import br.com.bookon.loan.payloads.mappers.LoanMapper;
+import br.com.bookon.loan.payloads.request.LoanRequest;
+import br.com.bookon.loan.payloads.response.BookResponse;
+import br.com.bookon.loan.payloads.response.LoanResponse;
+import br.com.bookon.loan.payloads.response.UserResponse;
 import br.com.bookon.loan.repositories.LoanRepository;
-import br.com.bookon.server.exceptions.BookNotFoundException;
-import br.com.bookon.server.models.mongo.BookMongo;
-import br.com.bookon.server.models.postgres.Book;
-import br.com.bookon.server.models.postgres.User;
-import br.com.bookon.server.repositories.postgres.BookRepository;
-import br.com.bookon.server.repositories.postgres.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,37 +26,28 @@ public class LoanService {
     private LoanRepository loanRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private BookRepository bookRepository;
-
-    @Autowired
     private MongoTemplate mongoTemplate;
 
-//    @Autowired
-//    private EmailProducer emailProducer;
+    @Autowired
+    private LoanMapper loanMapper;
+
+    @Autowired
+    private WebClient webClient;
 
     public Loan save(Loan loan) {
-        //emailProducer.sendMessage(loan.getLenderUser().getEmail());
-    	return loanRepository.save(loan);
+        return loanRepository.save(loan);
     }
 
     public List<LoanResponse> getAllLoans() {
         List<Loan> loans = loanRepository.findAll();
-        List<LoanResponse> loanResponses = new ArrayList<>();
-
-        for (Loan loan : loans) {
-            var loanResponse = new LoanResponse(loan);
-            loanResponses.add(loanResponse);
-        }
-
-        return loanResponses;
+        return loans.stream()
+                .map(loanMapper::convertToLoanResponse)
+                .collect(Collectors.toList());
     }
 
     public LoanResponse getLoanById(String id) {
         Loan loan = loanRepository.findById(id).orElse(null);
-        return new LoanResponse(loan);
+        return loanMapper.convertToLoanResponse(loan);
     }
 
     public boolean deleteLoan(String id) {
@@ -76,48 +60,42 @@ public class LoanService {
     }
 
     public LoanResponse createPropose(LoanRequest loanRequest, Integer borrowerId) {
-        User borrowerPostgres = userRepository.findById(borrowerId)
-        		.orElseThrow(UserNotFoundException::new);
+        UserResponse borrower = webClient.get().uri("http://localhost:/8082/api/users").retrieve().bodyToMono(UserResponse.class).block();
+        UserResponse lender = webClient.get().uri("http://localhost:/8082/api/users").retrieve().bodyToMono(UserResponse.class).block();
 
-        User lenderPostgres = userRepository.findById(loanRequest.getLenderId())
-        		.orElseThrow(UserNotFoundException::new);
-
-        Book bookPostgres = bookRepository.findById(loanRequest.getBookId())
-        		.orElseThrow(BookNotFoundException::new);
+        BookResponse book = webClient.get().uri("http://localhost:/8081/api/books/{}").retrieve().bodyToMono(BookResponse.class).block();
 
         var loan = new Loan();
-        loan.setBorrowerUser(new UserMongo(borrowerPostgres));
-        loan.setLenderUser(new UserMongo(lenderPostgres));
-        loan.setBook(new BookMongo(bookPostgres));
+        loan.setBorrower(borrower);
+        loan.setLender(lender);
+        loan.setBook(book);
         loan.setReturnDate(null);
         loan.setStatus(LoanStatusEnum.PENDING);
-        return new LoanResponse(save(loan));
-
+        return loanMapper.convertToLoanResponse(save(loan));
     }
 
-    public List<LoanResponse> listProposes(Integer lenderId) {
-        List<Loan> loans = loanRepository.findByLenderUserIdAndStatus(lenderId, LoanStatusEnum.PENDING);
+    public List<LoanResponse> listProposes(Long lenderId) {
+        List<Loan> loans = loanRepository.findByLenderIdAndStatus(lenderId, LoanStatusEnum.PENDING);
 
         return loans.stream()
-                .map(LoanResponse::new)
+                .map(loanMapper::convertToLoanResponse)
                 .collect(Collectors.toList());
     }
 
-    public void approvePropose(String loanId, Integer lenderUserId) {
-    	if (loanNotExists(loanId,lenderUserId)) {
-    		throw new LoanNotFoundException();
-    	}
-    	updateLoanStatusForApproved(loanId);
+    public void approvePropose(String loanId, Long lenderUserId) {
+        if (loanNotExists(loanId,lenderUserId)) {
+            return;
+        }
+        updateLoanStatusForApproved(loanId);
     }
 
-    private boolean loanNotExists(String loanId, Integer lenderUserId) {
-    	return !loanRepository.existsByIdAndLenderUserId(loanId, lenderUserId);
+    private boolean loanNotExists(String loanId, Long lenderUserId) {
+        return !loanRepository.existsByIdAndLenderId(loanId, lenderUserId);
     }
 
     private void updateLoanStatusForApproved(String loanId) {
-    	Query query = new Query(Criteria.where("_id").is(loanId));
-   	 	Update update = new Update().set("status", LoanStatusEnum.APPROVED);
-
+        Query query = new Query(Criteria.where("_id").is(loanId));
+        Update update = new Update().set("status", LoanStatusEnum.APPROVED);
         mongoTemplate.updateFirst(query, update, Loan.class);
     }
 }
