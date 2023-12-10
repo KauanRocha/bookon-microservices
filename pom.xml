@@ -18,6 +18,7 @@
         <module>notification</module>
         <module>server</module>
         <module>loan</module>
+        <module>book</module>
     </modules>
 
     <properties>
