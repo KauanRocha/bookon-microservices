@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  bookon-book:
+    image: mongo:latest
+    container_name: bookon-book
+    hostname: bookon-book
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: book
+      MONGO_INITDB_ROOT_PASSWORD: book
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/bookon-book --quiet
+      start_period: 10s
+    volumes:
+      - ./data/book/mongo:/data/db
+      - ./docker/book/mongo:/docker-entrypoint-initdb.d
+    ports:
+      - "27017:27017"
+    networks:
+      - bookon-network
+
+  bookon-loan:
+    image: mongo:latest
+    container_name: bookon-loan
+    hostname: bookon-loan
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: loan
+      MONGO_INITDB_ROOT_PASSWORD: loan
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27018/bookon-loan --quiet
+      start_period: 10s
+    volumes:
+      - ./data/loan/mongo/:/data/db
+      - ./docker/loan/mongo/docker-entrypoint-initdb.d
+    ports:
+      - "27018:27018"
+    networks:
+      - bookon-network
+
+  mongo-express-book:
+    image: mongo-express
+    container_name: mongo-express-book
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: book
+      ME_CONFIG_MONGODB_ADMINPASSWORD: book
+      ME_CONFIG_MONGODB_SERVER: bookon-book
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: adminpassword
+    ports:
+      - "8888:8081"
+    networks:
+      - bookon-network
+
+  mongo-express-loan:
+    image: mongo-express
+    container_name: mongo-express-loan
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: loan
+      ME_CONFIG_MONGODB_ADMINPASSWORD: loan
+      ME_CONFIG_MONGODB_SERVER: bookon-loan
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: adminpassword
+    ports:
+      - "8889:8081"
+    networks:
+      - bookon-network
+
+networks:
+  bookon-network:
+    driver: bridge

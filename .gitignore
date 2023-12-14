@@ -34,5 +34,12 @@ build/
 ### VS Code ###
 .vscode/
 
+## data ##
+
+data
+
+## docker ##
+docker
+
 ### Mac OS ###
 .DS_Store

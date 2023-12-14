@@ -10,6 +10,6 @@ public class MongoConfig {
 
     @Bean
     public MongoTemplate mongoTemplate(MongoClient mongoClient) {
-        return new MongoTemplate(mongoClient, "bookon");
+        return new MongoTemplate(mongoClient, "bookon-loan");
     }
 }
