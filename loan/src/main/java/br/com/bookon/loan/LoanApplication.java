@@ -2,11 +2,11 @@ package br.com.bookon.loan;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 
 @SpringBootApplication
-@EnableMongoRepositories(value = { "br.com.bookon.loan.repositories" })
+@EnableEurekaClient
 public class LoanApplication {
 
 	public static void main(String[] args) {

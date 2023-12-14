@@ -34,12 +34,16 @@ public class BookService {
     public BookResponse createBook(BookRequest bookRequest, Long userId){
 
         Book book = bookMapper.convertToBook(bookRequest);
+        System.out.println(bookRequest);
+        System.out.println(book);
+
 
         //Divida técnica
-        //ong userId = webClient.get().uri("http://localhost:/8081/api/users").retrieve().bodyToMono(Long.class).block();
+        //Boolean userExists = webClient.get().uri("http://localhost:/8081/api/users").retrieve().bodyToMono(Long.class).block();
 
         book.setUserId(userId);
 
+        System.out.println(book);
         return bookMapper.convertToBookResponse(bookRepository.save(book));
     }
 
@@ -63,9 +67,9 @@ public class BookService {
     public BookResponse updateBook(String id, BookRequest updatedBook) {
         Book existingBook = bookRepository.findBookById(id);
 
-        existingBook.setTitle(updatedBook.title());
-        existingBook.setAuthor(updatedBook.author());
-        existingBook.setCategory(updatedBook.category());
+        existingBook.setTitle(updatedBook.getTitle());
+        existingBook.setAuthor(updatedBook.getAuthor());
+        existingBook.setCategory(updatedBook.getCategory());
 
         return bookMapper.convertToBookResponse(bookRepository.save(existingBook));
     }

@@ -1,0 +1,10 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: bookon-book
+      username: book
+      password: book
+server:
+  port: 8082
