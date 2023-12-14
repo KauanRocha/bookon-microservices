@@ -13,6 +13,7 @@
         <module>loan</module>
         <module>book</module>
         <module>discovery-server</module>
+        <module>user</module>
     </modules>
 
     <properties>

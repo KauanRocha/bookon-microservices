@@ -29,13 +29,13 @@ services:
       MONGO_INITDB_ROOT_USERNAME: loan
       MONGO_INITDB_ROOT_PASSWORD: loan
     healthcheck:
-      test: echo 'db.stats().ok' | mongo localhost:27018/bookon-loan --quiet
+      test: echo 'db.stats().ok' | mongo localhost:27020/bookon-loan --quiet
       start_period: 10s
     volumes:
       - ./data/loan/mongo/:/data/db
-      - ./docker/loan/mongo/docker-entrypoint-initdb.d
+      - ./docker/loan/mongo:/docker-entrypoint-initdb.d
     ports:
-      - "27018:27018"
+      - "27020:27017"
     networks:
       - bookon-network
 
