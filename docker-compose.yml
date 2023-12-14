@@ -1,9 +1,9 @@
 version: "3.8"
 
 services:
-  bookon-book:
+  mongo-book:
     image: mongo:latest
-    container_name: bookon-book
+    container_name: mongo-book
     hostname: bookon-book
     restart: unless-stopped
     environment:
@@ -20,9 +20,9 @@ services:
     networks:
       - bookon-network
 
-  bookon-loan:
+  mongo-loan:
     image: mongo:latest
-    container_name: bookon-loan
+    container_name: mongo-loan
     hostname: bookon-loan
     restart: unless-stopped
     environment:
@@ -66,6 +66,28 @@ services:
       ME_CONFIG_BASICAUTH_PASSWORD: adminpassword
     ports:
       - "8889:8081"
+    networks:
+      - bookon-network
+
+  postgresql-user:
+    image: postgres:latest
+    container_name: postgresql-user
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
+      POSTGRES_DB: bookon-user
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/user/postgresql:/var/lib/postgresql/data
+      - ./docker/user/postgresql:/docker-entrypoint-initdb.d
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d bookon-user" ]  # Verifica se é possível se conectar ao banco de dados
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks:
       - bookon-network
 
