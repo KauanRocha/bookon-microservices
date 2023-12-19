@@ -1,6 +1,6 @@
 package br.com.bookon.user.payloads.response;
 
-public class SimplesUserResponse {
+public class SimpleUserResponse {
 
     private Integer id;
 
@@ -12,10 +12,10 @@ public class SimplesUserResponse {
         this.id = id;
     }
 
-    public SimplesUserResponse(Integer id) {
+    public SimpleUserResponse(Integer id) {
         this.id = id;
     }
 
-    public SimplesUserResponse() {
+    public SimpleUserResponse() {
     }
 }

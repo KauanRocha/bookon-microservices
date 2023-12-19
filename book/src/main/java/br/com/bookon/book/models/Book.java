@@ -4,11 +4,9 @@ import br.com.bookon.book.enums.BookCategoryEnum;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.io.Serializable;
-
 
 @Document( collection = "books")
-public class Book implements Serializable {
+public class Book {
 
     @Id
     private String id;
@@ -20,6 +18,7 @@ public class Book implements Serializable {
 
     public Book() {
     }
+
 
     public String getId() {
         return id;
@@ -61,9 +60,8 @@ public class Book implements Serializable {
         this.userId = userId;
     }
 
-    public Book(String id, String title, String author, BookCategoryEnum category, Long userId) {
+    public Book(String title, String author, BookCategoryEnum category, Long userId) {
         super();
-        this.id = id;
         this.title = title;
         this.author = author;
         this.category = category;

@@ -39,8 +39,5 @@ build/
 
 data
 
-## docker ##
-docker
-
 ### Mac OS ###
 .DS_Store

@@ -1,13 +1,11 @@
 package br.com.bookon.user.controllers;
 
 import br.com.bookon.user.payloads.request.UserRequest;
-import br.com.bookon.user.payloads.response.SimplesUserResponse;
+import br.com.bookon.user.payloads.response.SimpleUserResponse;
 import br.com.bookon.user.payloads.response.UserResponse;
 import br.com.bookon.user.services.UserService;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController implements ApiUserController {
@@ -20,12 +18,12 @@ public class UserController implements ApiUserController {
 
 
     @PostMapping
-    public UserResponse create(@Valid UserRequest userRequest) {
+    public UserResponse create(@RequestBody @Valid UserRequest userRequest) {
         return userService.create(userRequest);
     }
 
-    @GetMapping
-    public SimplesUserResponse getUser(@Valid Integer userId) {
+    @GetMapping("/{userId}")
+    public SimpleUserResponse getOne(@PathVariable(value = "userId") Integer userId) {
         return userService.getUser(userId);
     }
 }

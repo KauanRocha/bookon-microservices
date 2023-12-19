@@ -7,8 +7,6 @@ public class BookRequest {
     private String author;
     private BookCategoryEnum category;
 
-    private Long userId;
-
     public BookRequest() {
     }
 
@@ -16,7 +14,6 @@ public class BookRequest {
         this.title = title;
         this.author = author;
         this.category = category;
-        this.userId = userId;
     }
 
     // Getters e Setters
@@ -42,13 +39,5 @@ public class BookRequest {
 
     public void setCategory(BookCategoryEnum category) {
         this.category = category;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
     }
