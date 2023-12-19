@@ -1,4 +1,8 @@
+server:
+  port: 8084
 spring:
+  application:
+    name: loan
   data:
     mongodb:
       host: localhost
@@ -6,5 +10,9 @@ spring:
       database: bookon-loan
       username: loan
       password: loan
-server:
-  port: 8083
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    instance:
+      preferIpAddress: true

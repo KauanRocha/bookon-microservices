@@ -1,6 +1,8 @@
 server:
   port: 8083
 spring:
+  application:
+    name: user
   datasource:
     url: jdbc:postgresql://localhost:5432/bookon-user
     username: user
@@ -10,3 +12,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    instance:
+      preferIpAddress: true

@@ -63,7 +63,7 @@ public class LoanService {
         UserResponse borrower = webClient.get().uri("http://localhost:/8082/api/users").retrieve().bodyToMono(UserResponse.class).block();
         UserResponse lender = webClient.get().uri("http://localhost:/8082/api/users").retrieve().bodyToMono(UserResponse.class).block();
 
-        BookResponse book = webClient.get().uri("http://localhost:/8081/api/books/{}").retrieve().bodyToMono(BookResponse.class).block();
+        BookResponse book = webClient.get().uri("http://localhost:/8083/api/books/{}").retrieve().bodyToMono(BookResponse.class).block();
 
         var loan = new Loan();
         loan.setBorrower(borrower);
