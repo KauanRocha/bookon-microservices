@@ -7,6 +7,7 @@ import br.com.bookon.book.payloads.request.BookRequest;
 import br.com.bookon.book.payloads.response.BookResponse;
 import br.com.bookon.book.payloads.response.RegionWithBookRosponse;
 import br.com.bookon.book.payloads.response.RegionWithUsersResponse;
+import br.com.bookon.book.payloads.response.SimpleUserResponse;
 import br.com.bookon.book.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static br.com.bookon.book.enums.BookCategoryEnum.ROMANCE;
 
 @Service
 public class BookService {
@@ -34,12 +37,7 @@ public class BookService {
     public BookResponse createBook(BookRequest bookRequest, Long userId){
 
         Book book = bookMapper.convertToBook(bookRequest);
-        System.out.println(bookRequest);
-        System.out.println(book);
-
-
-        //Divida técnica
-        //Boolean userExists = webClient.get().uri("http://localhost:/8081/api/users").retrieve().bodyToMono(Long.class).block();
+        SimpleUserResponse userExists = webClient.get().uri("http://localhost:8083/api/users/" + userId).retrieve().bodyToMono(SimpleUserResponse.class).block();
 
         book.setUserId(userId);
 

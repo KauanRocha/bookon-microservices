@@ -1,3 +1,5 @@
+server:
+  port: 8083
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/bookon-user

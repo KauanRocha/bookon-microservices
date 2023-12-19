@@ -3,7 +3,7 @@ package br.com.bookon.user.services;
 import br.com.bookon.user.exceptions.UserNotFoundException;
 import br.com.bookon.user.model.User;
 import br.com.bookon.user.payloads.request.UserRequest;
-import br.com.bookon.user.payloads.response.SimplesUserResponse;
+import br.com.bookon.user.payloads.response.SimpleUserResponse;
 import br.com.bookon.user.payloads.response.UserResponse;
 import br.com.bookon.user.repositories.UserRepository;
 import org.springframework.beans.BeanUtils;
@@ -30,9 +30,9 @@ public class UserService {
         return new UserResponse(newUser.getId(), newUser.getName());
     }
 
-    public SimplesUserResponse getUser(Integer userId) {
+    public SimpleUserResponse getUser(Integer userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("user-not-found"));
 
-        return new SimplesUserResponse(user.getId());
+        return new SimpleUserResponse(user.getId());
     }
 }

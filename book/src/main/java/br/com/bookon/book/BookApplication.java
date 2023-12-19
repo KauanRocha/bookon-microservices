@@ -6,7 +6,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
-//@EnableMongoRepositories(value = { "br.com.bookon.book.repositories" })
+@EnableMongoRepositories(value = { "br.com.bookon.book.repositories" })
 @EnableEurekaClient
 public class BookApplication {
 

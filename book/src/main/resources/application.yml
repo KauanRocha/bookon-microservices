@@ -3,7 +3,7 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: bookon-book
+      database: bookonbook
       username: book
       password: book
 server:
