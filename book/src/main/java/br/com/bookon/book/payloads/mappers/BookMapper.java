@@ -1,6 +1,6 @@
 package br.com.bookon.book.payloads.mappers;
 
-import br.com.bookon.book.models.Book;
+import br.com.bookon.book.models.mongo.Book;
 import br.com.bookon.book.payloads.request.BookRequest;
 import br.com.bookon.book.payloads.response.BookResponse;
 import org.modelmapper.ModelMapper;

@@ -1,7 +1,7 @@
 package br.com.bookon.book.repositories;
 
 
-import br.com.bookon.book.models.Book;
+import br.com.bookon.book.models.mongo.Book;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

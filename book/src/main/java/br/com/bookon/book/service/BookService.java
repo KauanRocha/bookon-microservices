@@ -1,6 +1,6 @@
 package br.com.bookon.book.service;
 
-import br.com.bookon.book.models.Book;
+import br.com.bookon.book.models.mongo.Book;
 import br.com.bookon.book.payloads.mappers.BookMapper;
 import br.com.bookon.book.payloads.mappers.RegionMapper;
 import br.com.bookon.book.payloads.request.BookRequest;
@@ -17,22 +17,26 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static br.com.bookon.book.enums.BookCategoryEnum.ROMANCE;
-
 @Service
 public class BookService {
 
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
+
+    private final BookMapper bookMapper;
+
+    private final WebClient webClient;
+
+    private final RegionMapper regionMapper;
+
+
 
     @Autowired
-    private BookMapper bookMapper;
-
-    @Autowired
-    private WebClient webClient;
-
-    @Autowired
-    private RegionMapper regionMapper;
+    public BookService(BookRepository bookRepository, BookMapper bookMapper, WebClient webClient, RegionMapper regionMapper) {
+        this.bookRepository = bookRepository;
+        this.bookMapper = bookMapper;
+        this.webClient = webClient;
+        this.regionMapper = regionMapper;
+    }
 
     public BookResponse createBook(BookRequest bookRequest, Long userId){
 
@@ -40,8 +44,6 @@ public class BookService {
         SimpleUserResponse userExists = webClient.get().uri("http://localhost:8083/api/users/" + userId).retrieve().bodyToMono(SimpleUserResponse.class).block();
 
         book.setUserId(userId);
-
-        System.out.println(book);
         return bookMapper.convertToBookResponse(bookRepository.save(book));
     }
 
@@ -91,7 +93,7 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
-    public List<RegionWithBookRosponse> findRegionsWithNearbyBooksByAddress(Long userFinderId, String address) {
+    public List<RegionWithBookRosponse> findRegionsWithNearbyBooksByAddress(Integer userFinderId, String address) {
 
         List<RegionWithUsersResponse> regionsWithUsers = webClient.get().uri("http://localhost:/8081/api/users/address/"+address)
                 .retrieve()

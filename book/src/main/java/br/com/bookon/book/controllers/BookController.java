@@ -15,9 +15,12 @@ import java.util.List;
 @RestController
 @RequestMapping("api/books")
 public class BookController {
+    private final BookService bookService;
 
     @Autowired
-    private BookService bookService;
+    BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @PostMapping
     public ResponseEntity<BookResponse> createBook(@RequestParam Long userId, @Valid @RequestBody BookRequest bookRequest){
@@ -29,7 +32,7 @@ public class BookController {
         return new ResponseEntity<>(bookService.getAllBooks(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping()
     public ResponseEntity<List<BookResponse>> getBookById(@RequestParam Long userId) {
         return new ResponseEntity<>(bookService.getAllBooks(), HttpStatus.OK);
     }
@@ -51,7 +54,7 @@ public class BookController {
     }
 
     @GetMapping("/regions/address")
-    public ResponseEntity<List<RegionWithBookRosponse>> getBookByAddress(@RequestParam Long userId, @RequestBody String address){
+    public ResponseEntity<List<RegionWithBookRosponse>> getBookByAddress(@RequestParam Integer userId, @RequestBody String address){
         return new ResponseEntity<>(bookService.findRegionsWithNearbyBooksByAddress(userId, address), HttpStatus.OK);
     }
 
