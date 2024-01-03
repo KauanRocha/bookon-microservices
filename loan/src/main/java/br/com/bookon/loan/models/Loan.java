@@ -1,8 +1,6 @@
 package br.com.bookon.loan.models;
 
 import br.com.bookon.loan.enums.LoanStatusEnum;
-import br.com.bookon.loan.payloads.response.BookResponse;
-import br.com.bookon.loan.payloads.response.UserResponse;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -13,17 +11,17 @@ public class Loan {
     @Id
     private String id;
 
-    @Field("borrower")
-    private UserResponse borrower;
+    @Field("id_borrower")
+    private Integer borrowerId;
 
-    @Field("lender")
-    private UserResponse lender;
+    @Field("id_lender")
+    private Integer lenderId;
 
-    @Field("book")
-    private BookResponse book;
+    @Field("id_book")
+    private Integer bookId;
 
     @Field("status")
-    private LoanStatusEnum status;
+    private LoanStatusEnum status = LoanStatusEnum.PENDING;
 
     @Field("startDate")
     private LocalDateTime startDate;
@@ -42,28 +40,28 @@ public class Loan {
         this.id = id;
     }
 
-    public UserResponse getBorrower() {
-        return borrower;
+    public Integer getBorrowerId() {
+        return borrowerId;
     }
 
-    public void setBorrower(UserResponse borrower) {
-        this.borrower = borrower;
+    public void setBorrowerId(Integer borrowerId) {
+        this.borrowerId = borrowerId;
     }
 
-    public UserResponse getLender() {
-        return lender;
+    public Integer getLenderId() {
+        return lenderId;
     }
 
-    public void setLender(UserResponse lender) {
-        this.lender = lender;
+    public void setLenderId(Integer lenderId) {
+        this.lenderId = lenderId;
     }
 
-    public BookResponse getBook() {
-        return book;
+    public Integer getBookId() {
+        return bookId;
     }
 
-    public void setBook(BookResponse book) {
-        this.book = book;
+    public void setBookId(Integer bookId) {
+        this.bookId = bookId;
     }
 
     public LoanStatusEnum getStatus() {

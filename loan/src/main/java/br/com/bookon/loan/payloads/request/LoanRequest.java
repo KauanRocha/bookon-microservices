@@ -1,7 +1,7 @@
 package br.com.bookon.loan.payloads.request;
 
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
-public record LoanRequest(@Valid Long lender,@Valid Long borrower, @Valid Long book) {
+public record LoanRequest(@NotNull Integer lenderId, @NotNull Integer borrowerId, @NotNull Integer bookId) {
 
 }

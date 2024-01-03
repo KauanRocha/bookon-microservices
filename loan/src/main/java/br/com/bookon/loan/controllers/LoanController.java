@@ -1,5 +1,7 @@
 package br.com.bookon.loan.controllers;
 
+import br.com.bookon.loan.enums.LoanStatusEnum;
+import br.com.bookon.loan.models.Loan;
 import br.com.bookon.loan.payloads.request.LoanRequest;
 import br.com.bookon.loan.payloads.response.LoanResponse;
 import br.com.bookon.loan.services.LoanService;
@@ -15,33 +17,20 @@ import java.util.List;
 @RequestMapping("/api/loans")
 public class LoanController {
 
+    private final LoanService loanService;
+
     @Autowired
-    private LoanService loanService;
+    public LoanController(LoanService loanService) {
+        this.loanService = loanService;
+    }
 
-    @GetMapping
-    public ResponseEntity<List<LoanResponse>> getAllLoans() {
-        List<LoanResponse> loans = loanService.getAllLoans();
+    @GetMapping("/me/propose/search")
+    public ResponseEntity <List<LoanResponse>> getLoanBy(@RequestParam Integer borrowerId) {
+        List<LoanResponse> loans = loanService.getLoanByBorrowerId(borrowerId);
+        if (loans.isEmpty()) {
+            return new ResponseEntity<>(loans, HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(loans, HttpStatus.OK);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<LoanResponse> getLoanById(@RequestParam String id) {
-        var loan = loanService.getLoanById(id);
-        if (loan != null) {
-            return new ResponseEntity<>(loan, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> deleteLoan(@RequestParam String id) {
-        boolean deleted = loanService.deleteLoan(id);
-        if (deleted) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     @PostMapping("/propose/create")
@@ -53,12 +42,16 @@ public class LoanController {
     @GetMapping("propose/search")
     public ResponseEntity<List<LoanResponse>> listPropose(@RequestParam Long lenderId) {
         List<LoanResponse> loans = loanService.listProposes(lenderId);
+        if (loans.isEmpty()) {
+            return new ResponseEntity<>(loans, HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(loans, HttpStatus.OK);
     }
 
-    @PutMapping("/propose/approve")
-    public ResponseEntity<Void> approvePropose(@RequestParam String loanId,@RequestParam Long lenderUserId) {
-        loanService.approvePropose(loanId, lenderUserId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PutMapping("/propose/change")
+    public ResponseEntity<Void> changePropose(@RequestParam String loanId, @RequestParam Integer lenderId, @RequestParam LoanStatusEnum loanStatusEnum) {
+        loanService.changePropose(loanId, lenderId, loanStatusEnum);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
 }
