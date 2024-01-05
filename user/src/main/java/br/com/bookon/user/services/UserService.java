@@ -30,9 +30,9 @@ public class UserService {
         return new UserResponse(newUser.getId(), newUser.getName());
     }
 
-    public SimpleUserResponse getUser(Integer userId) {
+    public Boolean getUser(Integer userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("user-not-found"));
 
-        return new SimpleUserResponse(user.getId());
+        return Boolean.TRUE;
     }
 }

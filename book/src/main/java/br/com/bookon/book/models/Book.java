@@ -1,31 +1,35 @@
-package br.com.bookon.book.payloads.request;
+package br.com.bookon.book.models;
 
 import br.com.bookon.book.enums.BookCategoryEnum;
-import br.com.bookon.book.models.BookShelf;
-import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-public class BookRequest {
+@Document( collection = "books")
+public class Book extends DateHelper {
 
-    @NotNull
+    @Id
+    private String id;
+
     private String title;
-    @NotNull
     private String author;
-    @NotNull
     private BookCategoryEnum category;
-    @NotNull
-    private String bookShelfId;
+    @Field(name = "id_book_shelf")
 
-    public BookRequest() {
+    private Integer bookShelfId;
+
+    @Field(name = "id_user")
+    private Integer userId;
+
+
+    public String getId() {
+        return id;
     }
 
-    public BookRequest(String title, String author, BookCategoryEnum category, String bookShelfId) {
-        this.title = title;
-        this.author = author;
-        this.category = category;
-        this.bookShelfId = bookShelfId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    // Getters e Setters
     public String getTitle() {
         return title;
     }
@@ -50,11 +54,11 @@ public class BookRequest {
         this.category = category;
     }
 
-    public String getBookShelfId() {
+    public Integer getBookShelfId() {
         return bookShelfId;
     }
 
-    public void setBookShelfId(String bookShelfId) {
+    public void setBookShelfId(Integer bookShelfId) {
         this.bookShelfId = bookShelfId;
     }
 }

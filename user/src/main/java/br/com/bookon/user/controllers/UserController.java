@@ -22,8 +22,10 @@ public class UserController implements ApiUserController {
         return userService.create(userRequest);
     }
 
-    @GetMapping("/{userId}")
-    public SimpleUserResponse getOne(@PathVariable(value = "userId") Integer userId) {
+    @GetMapping()
+    public Boolean existsUser(@RequestParam(name = "userId") Integer userId) {
         return userService.getUser(userId);
     }
+
+
 }

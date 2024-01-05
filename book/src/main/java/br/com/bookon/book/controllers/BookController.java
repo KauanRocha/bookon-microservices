@@ -23,18 +23,13 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<BookResponse> createBook(@RequestParam Long userId, @Valid @RequestBody BookRequest bookRequest){
+    public ResponseEntity<BookResponse> createBook(@RequestParam Integer userId, @Valid @RequestBody BookRequest bookRequest){
         return new ResponseEntity<>(bookService.createBook(bookRequest, userId), HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<List<BookResponse>> getAllBooks() {
-        return new ResponseEntity<>(bookService.getAllBooks(), HttpStatus.OK);
-    }
-
     @GetMapping()
-    public ResponseEntity<List<BookResponse>> getBookById(@RequestParam Long userId) {
-        return new ResponseEntity<>(bookService.getAllBooks(), HttpStatus.OK);
+    public ResponseEntity<List<BookResponse>> getBookById(@RequestParam Integer userId) {
+        return new ResponseEntity<>(bookService.getBookByUserId(userId), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -48,14 +43,14 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/regions/geolocation")
-    public ResponseEntity<List<RegionWithBookRosponse>> getBookByGeolocation(@RequestParam Long userId){
-        return new ResponseEntity<>(bookService.findRegionsWithNearbyBooksByUserGeolocation(userId), HttpStatus.OK);
-    }
-
-    @GetMapping("/regions/address")
-    public ResponseEntity<List<RegionWithBookRosponse>> getBookByAddress(@RequestParam Integer userId, @RequestBody String address){
-        return new ResponseEntity<>(bookService.findRegionsWithNearbyBooksByAddress(userId, address), HttpStatus.OK);
-    }
+//    @GetMapping("/regions/geolocation")
+//    public ResponseEntity<List<RegionWithBookRosponse>> getBookByGeolocation(@RequestParam Long userId){
+//        return new ResponseEntity<>(bookService.findRegionsWithNearbyBooksByUserGeolocation(userId), HttpStatus.OK);
+//    }
+//
+//    @GetMapping("/regions/address")
+//    public ResponseEntity<List<RegionWithBookRosponse>> getBookByAddress(@RequestParam Integer userId, @RequestBody String address){
+//        return new ResponseEntity<>(bookService.findRegionsWithNearbyBooksByAddress(userId, address), HttpStatus.OK);
+//    }
 
 }
