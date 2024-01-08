@@ -29,19 +29,15 @@ public class BookService {
     private BookMapper bookMapper;
 
     @Autowired
-    private WebClient webClient;
+    private WebClient.Builder webClientBuilder;
 
     @Autowired
     private RegionMapper regionMapper;
 
     public BookResponse createBook(BookRequest bookRequest, Long userId){
-
+        SimpleUserResponse userExists = webClientBuilder.build().get().uri("http://user/api/users/" + userId).retrieve().bodyToMono(SimpleUserResponse.class).block();
         Book book = bookMapper.convertToBook(bookRequest);
-        SimpleUserResponse userExists = webClient.get().uri("http://localhost:8083/api/users/" + userId).retrieve().bodyToMono(SimpleUserResponse.class).block();
-
         book.setUserId(userId);
-
-        System.out.println(book);
         return bookMapper.convertToBookResponse(bookRepository.save(book));
     }
 
@@ -80,7 +76,7 @@ public class BookService {
 
     public List<RegionWithBookRosponse> findRegionsWithNearbyBooksByUserGeolocation(Long userFinderId) {
 
-        List<RegionWithUsersResponse> regionsWithUsers = webClient.get().uri("http://localhost:/8081/api/users/geolocation/"+userFinderId)
+        List<RegionWithUsersResponse> regionsWithUsers = webClientBuilder.build().get().uri("http://localhost:/8081/api/users/geolocation/"+userFinderId)
                 .retrieve()
                 .bodyToFlux(RegionWithUsersResponse.class)
                 .collectList()
@@ -93,7 +89,7 @@ public class BookService {
 
     public List<RegionWithBookRosponse> findRegionsWithNearbyBooksByAddress(Long userFinderId, String address) {
 
-        List<RegionWithUsersResponse> regionsWithUsers = webClient.get().uri("http://localhost:/8081/api/users/address/"+address)
+        List<RegionWithUsersResponse> regionsWithUsers = webClientBuilder.build().get().uri("http://localhost:/8081/api/users/address/"+address)
                 .retrieve()
                 .bodyToFlux(RegionWithUsersResponse.class)
                 .collectList()

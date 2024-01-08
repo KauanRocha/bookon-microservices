@@ -18,12 +18,12 @@ public class LoanService {
 
     private final LoanRepository loanRepository;
 
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     @Autowired
-    public LoanService(LoanRepository loanRepository, WebClient webClient) {
+    public LoanService(LoanRepository loanRepository, WebClient.Builder webClientBuilder) {
         this.loanRepository = loanRepository;
-        this.webClient = webClient;
+        this.webClientBuilder = webClientBuilder;
     }
 
     public Loan save(Loan loan) {
@@ -38,9 +38,9 @@ public class LoanService {
     }
 
     public LoanResponse createPropose(LoanRequest loanRequest, Integer borrowerId) {
-        boolean borrowerExist = Boolean.TRUE.equals(webClient.get().uri("http://localhost:/8082/api/users").retrieve().bodyToMono(boolean.class).block());
-        boolean lenderExist = Boolean.TRUE.equals(webClient.get().uri("http://localhost:/8082/api/users").retrieve().bodyToMono(boolean.class).block());
-        boolean bookExist = Boolean.TRUE.equals(webClient.get().uri("http://localhost:/8083/api/books/{}").retrieve().bodyToMono(boolean.class).block());
+        boolean borrowerExist = Boolean.TRUE.equals(webClientBuilder.build().get().uri("http://user/api/users").retrieve().bodyToMono(boolean.class).block());
+        boolean lenderExist = Boolean.TRUE.equals(webClientBuilder.build().get().uri("http://user/api/users").retrieve().bodyToMono(boolean.class).block());
+        boolean bookExist = Boolean.TRUE.equals(webClientBuilder.build().get().uri("http://book/api/books").retrieve().bodyToMono(boolean.class).block());
 
         var loan = new Loan();
         BeanUtils.copyProperties(loanRequest, loan);
@@ -55,7 +55,7 @@ public class LoanService {
     }
 
     public void changePropose(String loanId, Integer lenderId,LoanStatusEnum loanStatusEnum) {
-        Loan existLoan = loanRepository.findByLoanIdAndLenderId(loanId, lenderId).orElseThrow(LoanNotFoundException::new);
+        Loan existLoan = loanRepository.findByIdAndLenderId(loanId, lenderId).orElseThrow(LoanNotFoundException::new);
         existLoan.setStatus(loanStatusEnum);
         save(existLoan);
     }

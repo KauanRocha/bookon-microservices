@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 0
 spring:
   application:
     name: loan
@@ -7,7 +7,7 @@ spring:
     mongodb:
       host: localhost
       port: 27020
-      database: bookon-loan
+      database: bookonloan
       username: loan
       password: loan
 eureka:

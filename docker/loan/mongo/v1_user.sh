@@ -1,0 +1,1 @@
+mongosh -u loan -p loan --authenticationDatabase admin localhost/bookonloan --eval 'db.createUser({ user: "loan", pwd: "loan", roles: [ { role: "root", db: "admin" }, { role: "dbOwner", db: "bookonloan" }, { role: "readWrite", db: "bookonloan" }, { role: "dbAdmin", db: "bookonloan" } ] });'

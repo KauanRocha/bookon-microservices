@@ -1,7 +1,6 @@
 package br.com.bookon.loan.controllers;
 
 import br.com.bookon.loan.enums.LoanStatusEnum;
-import br.com.bookon.loan.models.Loan;
 import br.com.bookon.loan.payloads.request.LoanRequest;
 import br.com.bookon.loan.payloads.response.LoanResponse;
 import br.com.bookon.loan.services.LoanService;
@@ -14,7 +13,6 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/loans")
 public class LoanController {
 
     private final LoanService loanService;
@@ -31,6 +29,12 @@ public class LoanController {
             return new ResponseEntity<>(loans, HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(loans, HttpStatus.OK);
+    }
+
+    @GetMapping()
+    public void teste(){
+        loanService.getLoanByBorrowerId(1);
+        System.out.println("tttt");
     }
 
     @PostMapping("/propose/create")

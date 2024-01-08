@@ -1,4 +1,4 @@
-package br.com.bookon.book.configs;
+package br.com.bookon.user.configs;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

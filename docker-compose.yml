@@ -25,7 +25,7 @@ services:
   mongo-loan:
     image: mongo:latest
     container_name: mongo-loan
-    hostname: bookon-loan
+    hostname: bookonloan
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: loan
@@ -63,7 +63,7 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: loan
       ME_CONFIG_MONGODB_ADMINPASSWORD: loan
-      ME_CONFIG_MONGODB_SERVER: bookon-loan
+      ME_CONFIG_MONGODB_SERVER: bookonloan
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: adminpassword
     ports:
