@@ -47,6 +47,16 @@ public class LoanService {
         return convertToLoanResponse(save(loan));
     }
 
+    public LoanResponse createProposeV2(LoanRequest loanRequest) {
+        boolean borrowerExist = Boolean.TRUE.equals(webClient.get().uri("http://localhost:/8082/api/users").retrieve().bodyToMono(boolean.class).block());
+        boolean lenderExist = Boolean.TRUE.equals(webClient.get().uri("http://localhost:/8082/api/users").retrieve().bodyToMono(boolean.class).block());
+        boolean bookExist = Boolean.TRUE.equals(webClient.get().uri("http://localhost:/8083/api/books/{}").retrieve().bodyToMono(boolean.class).block());
+
+        var loan = new Loan();
+        BeanUtils.copyProperties(loanRequest, loan);
+        return convertToLoanResponse(save(loan));
+    }
+
     public List<LoanResponse> listProposes(Long lenderId) {
         List<Loan> loans = loanRepository.findByLenderIdAndStatus(lenderId, LoanStatusEnum.PENDING);
         return loans.stream()
